@@ -1,5 +1,84 @@
-valorA = float(input("Digite o valor de A: "))
-valorB = float(input("Digite o valor de B: "))
+import os
 
-soma = valorA + valorB
-print("A soma de A e B é:", soma)
+def limpar_tela():
+    os.system("cls" if os.name == "nt" else "clear")
+
+def ler_numero(mensagem):
+    while True:
+        try:
+            return float(input(mensagem))
+        except ValueError:
+            print("Entrada inválida. Digite um número válido.")
+
+def exibir_menu():
+    print("""
+================= CALCULADORA =================
+[1] Soma (+)
+[2] Subtração (-)
+[3] Multiplicação (*)
+[4] Divisão (/)
+[5] Potência (^)
+[6] Histórico
+[0] Sair
+===============================================
+""")
+
+def calcular(opcao, a, b):
+    if opcao == "1":
+        return a + b, "+"
+    elif opcao == "2":
+        return a - b, "-"
+    elif opcao == "3":
+        return a * b, "*"
+    elif opcao == "4":
+        if b == 0:
+            return None, "Erro: divisão por zero"
+        return a / b, "/"
+    elif opcao == "5":
+        return a ** b, "^"
+    return None, None
+
+def main():
+    historico = []
+
+    while True:
+        limpar_tela()
+        exibir_menu()
+
+        opcao = input("Escolha uma opção: ").strip()
+
+        if opcao == "0":
+            print("Encerrando calculadora...")
+            break
+
+        elif opcao == "6":
+            print("\n=== HISTÓRICO ===")
+            if not historico:
+                print("Nenhuma operação realizada.")
+            else:
+                for item in historico:
+                    print(item)
+            input("\nPressione ENTER para voltar...")
+            continue
+
+        elif opcao in ["1", "2", "3", "4", "5"]:
+            a = ler_numero("Digite o primeiro número: ")
+            b = ler_numero("Digite o segundo número: ")
+
+            resultado, simbolo = calcular(opcao, a, b)
+
+            if resultado is None:
+                print(simbolo)
+            else:
+                operacao_str = f"{a} {simbolo} {b} = {resultado:.2f}"
+                print("\nResultado:", operacao_str)
+                historico.append(operacao_str)
+
+            input("\nPressione ENTER para continuar...")
+
+        else:
+            print("Opção inválida.")
+            input("Pressione ENTER para continuar...")
+
+if __name__ == "__main__":
+    main()
